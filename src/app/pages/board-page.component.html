@@ -1,0 +1,55 @@
+<section class="dashboard">
+  <header class="topbar">
+    <div>
+      <h1>Recruiter Kanban Board</h1>
+      <p>Track candidates, move stages, and take hiring actions.</p>
+    </div>
+    <div class="stats">
+      <span>{{ filtered().length }} candidates</span>
+    </div>
+  </header>
+
+  <section class="filters">
+    <input
+      type="search"
+      placeholder="Search by name, role, skills..."
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+
+    <select [ngModel]="selectedTag()" (ngModelChange)="selectedTag.set($event)">
+      <option value="all">All tags</option>
+      @for (tag of tags(); track tag) {
+        <option [value]="tag">{{ tag }}</option>
+      }
+    </select>
+
+    <select [ngModel]="selectedPosition()" (ngModelChange)="selectedPosition.set($event)">
+      <option value="all">All positions</option>
+      @for (position of positions(); track position) {
+        <option [value]="position">{{ position }}</option>
+      }
+    </select>
+  </section>
+
+  <section class="board">
+    @for (stage of stages; track stage) {
+      <article class="column">
+        <header>
+          <h3>{{ stage }}</h3>
+          <span>{{ byStage(stage).length }}</span>
+        </header>
+
+        <div class="cards" cdkDropList [cdkDropListData]="byStage(stage)" (cdkDropListDropped)="onDrop(stage, $event)">
+          @for (candidate of byStage(stage); track candidate.id) {
+            <div cdkDrag [cdkDragData]="candidate">
+              <app-candidate-card [candidate]="candidate" (action)="runAction(candidate.id, $event)" />
+            </div>
+          } @empty {
+            <p class="empty">No candidates</p>
+          }
+        </div>
+      </article>
+    }
+  </section>
+</section>

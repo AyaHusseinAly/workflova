@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+.card {
+  background: #161f3c;
+  border: 1px solid #2f4375;
+  border-radius: 0.7rem;
+  padding: 0.7rem;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.status {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status.hired {
+  color: #4ade80;
+}
+
+.status.rejected {
+  color: #f87171;
+}
+
+p {
+  margin: 0.3rem 0 0;
+  color: #b6c0d2;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.45rem 0;
+}
+
+.tags span {
+  background: #223159;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.actions a,
+.actions button {
+  border: 1px solid #2d3f70;
+  color: #dbe4ff;
+  text-decoration: none;
+  background: #1a2647;
+  border-radius: 0.45rem;
+  padding: 0.25rem 0.45rem;
+  font-size: 0.74rem;
+  cursor: pointer;
+}
+
+.actions .danger {
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.actions .success {
+  border-color: #14532d;
+  color: #86efac;
+}

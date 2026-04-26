@@ -1,0 +1,102 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #0b1020;
+  color: #e5e7eb;
+}
+
+.details {
+  padding: 1.25rem;
+}
+
+.back {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+header {
+  margin: 0.8rem 0 1rem;
+}
+
+h1 {
+  margin: 0;
+}
+
+p {
+  color: #b6c0d2;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags span {
+  border: 1px solid #2d3f70;
+  background: #1a2647;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.panel {
+  border: 1px solid #24355d;
+  background: #121b36;
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+li {
+  margin-bottom: 0.45rem;
+}
+
+small {
+  color: #9ca3af;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+
+textarea {
+  border: 1px solid #2c3a64;
+  background: #111935;
+  color: #dbe4ff;
+  border-radius: 0.6rem;
+  padding: 0.5rem;
+}
+
+button {
+  align-self: start;
+  border: 1px solid #2d3f70;
+  color: #dbe4ff;
+  background: #1a2647;
+  border-radius: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

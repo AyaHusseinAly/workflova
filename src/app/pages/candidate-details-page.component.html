@@ -1,0 +1,65 @@
+@if (candidate(); as selected) {
+  <section class="details">
+    <a class="back" routerLink="/">Back to board</a>
+
+    <header>
+      <h1>{{ selected.name }}</h1>
+      <p>{{ selected.position }} . {{ selected.experience }} years . {{ selected.stage }}</p>
+      <div class="tags">
+        @for (tag of selected.tags; track tag) {
+          <span>{{ tag }}</span>
+        }
+      </div>
+    </header>
+
+    <div class="grid">
+      <article class="panel">
+        <h3>Timeline</h3>
+        <ul>
+          @for (item of selected.timeline; track item.at + item.text) {
+            <li>
+              <strong>{{ item.type }}</strong>
+              <p>{{ item.text }}</p>
+              <small>{{ item.at }}</small>
+            </li>
+          }
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h3>Notes</h3>
+        <div class="composer">
+          <textarea [ngModel]="noteInput()" (ngModelChange)="noteInput.set($event)" rows="3"></textarea>
+          <button type="button" (click)="saveNote()">Add Note</button>
+        </div>
+        <ul>
+          @for (note of selected.notes; track note) {
+            <li>{{ note }}</li>
+          } @empty {
+            <li>No notes yet.</li>
+          }
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h3>Interview Feedback</h3>
+        <div class="composer">
+          <textarea [ngModel]="feedbackInput()" (ngModelChange)="feedbackInput.set($event)" rows="3"></textarea>
+          <button type="button" (click)="saveFeedback()">Add Feedback</button>
+        </div>
+        <ul>
+          @for (feedback of selected.interviewFeedback; track feedback) {
+            <li>{{ feedback }}</li>
+          } @empty {
+            <li>No feedback yet.</li>
+          }
+        </ul>
+      </article>
+    </div>
+  </section>
+} @else {
+  <section class="details">
+    <a class="back" routerLink="/">Back to board</a>
+    <p>Candidate not found.</p>
+  </section>
+}

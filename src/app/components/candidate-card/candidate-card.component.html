@@ -1,0 +1,23 @@
+<article class="card">
+  <div class="card-head">
+    <h4>{{ candidate().name }}</h4>
+    <span class="status" [class.rejected]="candidate().status === 'rejected'" [class.hired]="candidate().status === 'hired'">
+      {{ candidate().status }}
+    </span>
+  </div>
+
+  <p>{{ candidate().position }} . {{ candidate().experience }} yrs</p>
+
+  <div class="tags">
+    @for (tag of candidate().tags; track tag) {
+      <span>{{ tag }}</span>
+    }
+  </div>
+
+  <div class="actions">
+    <a [routerLink]="['/candidates', candidate().id]">Details</a>
+    <button type="button" (click)="onAction('schedule')">Schedule</button>
+    <button type="button" class="danger" (click)="onAction('reject')">Reject</button>
+    <button type="button" class="success" (click)="onAction('hire')">Hire</button>
+  </div>
+</article>
