@@ -5,5 +5,10 @@ export const selectCandidatesState = createFeatureSelector<CandidatesState>(CAND
 
 export const selectAllCandidates = createSelector(selectCandidatesState, (state) => state.candidates);
 
+export const selectHydratedTemplateId = createSelector(
+  selectCandidatesState,
+  (state) => state.hydratedTemplateId,
+);
+
 export const selectCandidateById = (candidateId: string) =>
   createSelector(selectAllCandidates, (candidates) => candidates.find((candidate) => candidate.id === candidateId));

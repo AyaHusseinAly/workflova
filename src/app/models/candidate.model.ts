@@ -1,15 +1,3 @@
-export const STAGES = [
-  'Applied',
-  'Screening',
-  'First Interview',
-  'Technical Interview',
-  'Offer',
-  'Hired',
-  'Rejected',
-] as const;
-
-export type Stage = (typeof STAGES)[number];
-
 export type CandidateAction = 'schedule' | 'reject' | 'hire';
 
 export interface CandidateActivity {
@@ -18,12 +6,15 @@ export interface CandidateActivity {
   at: string;
 }
 
+/** Workflow column id — comes from the active domain template `stages`. */
+export type WorkflowStage = string;
+
 export interface Candidate {
   id: string;
   name: string;
   position: string;
   experience: number;
-  stage: Stage;
+  stage: WorkflowStage;
   status: 'active' | 'hired' | 'rejected';
   tags: string[];
   notes: string[];

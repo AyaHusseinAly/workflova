@@ -4,6 +4,12 @@ import { CandidatesState, initialCandidatesState } from './candidates.state';
 
 export const candidatesReducer = createReducer(
   initialCandidatesState,
+  on(CandidatesActions.hydrateBoard, (_, { templateId, candidates, successStage, failureStage }) => ({
+    candidates,
+    hydratedTemplateId: templateId,
+    successStage,
+    failureStage,
+  })),
   on(CandidatesActions.updateStage, (state, { candidateId, stage }) => ({
     ...state,
     candidates: state.candidates.map((candidate) =>
@@ -71,17 +77,20 @@ export const candidatesReducer = createReducer(
       if (action === 'reject') {
         return {
           ...candidate,
-          stage: 'Rejected',
+          stage: state.failureStage,
           status: 'rejected',
-          timeline: [{ type: 'status', text: 'Candidate rejected', at: timestamp() }, ...candidate.timeline],
+          timeline: [
+            { type: 'status', text: `Moved to ${state.failureStage}`, at: timestamp() },
+            ...candidate.timeline,
+          ],
         };
       }
 
       return {
         ...candidate,
-        stage: 'Hired',
+        stage: state.successStage,
         status: 'hired',
-        timeline: [{ type: 'status', text: 'Candidate hired', at: timestamp() }, ...candidate.timeline],
+        timeline: [{ type: 'status', text: `Moved to ${state.successStage}`, at: timestamp() }, ...candidate.timeline],
       };
     }),
   })),

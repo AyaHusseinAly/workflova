@@ -1,0 +1,61 @@
+<app-auth-shell
+  title="Create your account"
+  subtitle="Start with email and password, then create your board and choose a workflow template."
+  footerPrompt="Already have an account?"
+  footerLinkLabel="Sign in"
+  footerLinkPath="/login"
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+    @if (errorMessage()) {
+      <p class="form-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" autocomplete="email" formControlName="email" placeholder="you@company.com" />
+      @if (hasError('email', 'required')) {
+        <small>Email is required.</small>
+      } @else if (hasError('email', 'email')) {
+        <small>Enter a valid email address.</small>
+      }
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input
+        type="password"
+        autocomplete="new-password"
+        formControlName="password"
+        placeholder="At least 8 characters"
+      />
+      @if (hasError('password', 'required')) {
+        <small>Password is required.</small>
+      } @else if (hasError('password', 'minlength')) {
+        <small>Use at least 8 characters.</small>
+      } @else if (hasError('password', 'pattern')) {
+        <small>Include letters, numbers, and a special character.</small>
+      }
+    </label>
+
+    <label class="field">
+      <span>Confirm password</span>
+      <input
+        type="password"
+        autocomplete="new-password"
+        formControlName="confirmPassword"
+        placeholder="Re-enter your password"
+      />
+      @if (hasError('confirmPassword', 'required')) {
+        <small>Confirm your password.</small>
+      } @else if (hasPasswordMismatch()) {
+        <small>Passwords do not match.</small>
+      }
+    </label>
+
+    <button class="primary-button" type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Creating account...' : 'Create account' }}
+    </button>
+
+    <p class="demo-note">Demo mode stores accounts in this browser only. No backend is connected yet.</p>
+  </form>
+</app-auth-shell>

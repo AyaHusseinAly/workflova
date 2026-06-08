@@ -27,11 +27,34 @@ p {
   color: #b6c0d2;
 }
 
-.stats {
+.session-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.stats,
+.session-email {
   background: #151d35;
   border: 1px solid #27355f;
   border-radius: 999px;
   padding: 0.5rem 0.85rem;
+}
+
+.session-email {
+  color: #dbe4ff;
+  font-size: 0.85rem;
+}
+
+.sign-out {
+  border: 1px solid #2d3f70;
+  background: #1a2647;
+  color: #dbe4ff;
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
 }
 
 .filters {
@@ -52,7 +75,7 @@ select {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(7, minmax(220px, 1fr));
+  grid-template-columns: repeat(var(--board-columns, 6), minmax(200px, 1fr));
   gap: 0.9rem;
   overflow-x: auto;
   padding-bottom: 1rem;

@@ -1,0 +1,38 @@
+<div class="auth-page">
+  <aside class="brand-panel" aria-hidden="true">
+    <div class="brand-glow"></div>
+
+    <div class="brand-content">
+      <img class="brand-logo brand-logo--hero" src="/workflova.png" alt="Workflova" />
+
+      <div class="brand-phrases">
+        <p class="brand-lead">Your work, in motion.</p>
+        <p class="brand-line">build domain-driven workflows</p>
+        <p class="brand-line">connect with your team and stay in sync.</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="form-panel">
+    <section class="form-card">
+      <header class="form-header">
+        <div class="form-brand">
+          <img class="brand-logo brand-logo--compact" src="/workflova.png" alt="" />
+          <div>
+            <!-- <p class="eyebrow">Workflova</p> -->
+            <p class="form-tagline">Workflow platform</p>
+          </div>
+        </div>
+        <h2>{{ title() }}</h2>
+        <p>{{ subtitle() }}</p>
+      </header>
+
+      <ng-content />
+
+      <p class="form-footer">
+        {{ footerPrompt() }}
+        <a [routerLink]="footerLinkPath()">{{ footerLinkLabel() }}</a>
+      </p>
+    </section>
+  </main>
+</div>

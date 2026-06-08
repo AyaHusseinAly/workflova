@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideStore({ [CANDIDATES_FEATURE_KEY]: candidatesReducer }),
     provideStoreDevtools({
-      name: 'Recruiter Kanban',
+      name: 'Workflova',
       maxAge: 25,
       logOnly: false,
       autoPause: true,

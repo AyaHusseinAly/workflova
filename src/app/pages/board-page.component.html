@@ -1,18 +1,33 @@
 <section class="dashboard">
   <header class="topbar">
     <div>
-      <h1>Recruiter Kanban Board</h1>
-      <p>Track candidates, move stages, and take hiring actions.</p>
+      <h1>{{ activeWorkspace()?.boardName ?? 'Workflova board' }}</h1>
+      <p>
+        @if (activeTemplate(); as template) {
+          {{ template.name }} workflow demo board.
+        } @else {
+          Track records, move stages, and take workflow actions.
+        }
+      </p>
     </div>
-    <div class="stats">
-      <span>{{ filtered().length }} candidates</span>
+    <div class="session-panel">
+      <span class="stats"
+        >{{ filtered().length }}
+        {{ activeTemplate()?.entityPlural ?? 'records' }}</span
+      >
+      @if (session(); as activeSession) {
+        <span class="session-email">{{ activeSession.email }}</span>
+      }
+      <button type="button" class="sign-out" (click)="signOut()">Sign out</button>
     </div>
   </header>
 
   <section class="filters">
     <input
       type="search"
-      placeholder="Search by name, role, skills..."
+      [attr.placeholder]="
+        'Search by name, ' + (activeTemplate()?.secondaryFilterLabel?.toLowerCase() ?? 'details') + ', tags...'
+      "
       [ngModel]="search()"
       (ngModelChange)="search.set($event)"
     />
@@ -25,15 +40,19 @@
     </select>
 
     <select [ngModel]="selectedPosition()" (ngModelChange)="selectedPosition.set($event)">
-      <option value="all">All positions</option>
+      <option value="all">All {{ activeTemplate()?.secondaryFilterLabel?.toLowerCase() ?? 'details' }}</option>
       @for (position of positions(); track position) {
         <option [value]="position">{{ position }}</option>
       }
     </select>
   </section>
 
-  <section class="board" cdkDropListGroup>
-    @for (stage of stages; track stage) {
+  <section
+    class="board"
+    [style.--board-columns]="stages().length || 1"
+    cdkDropListGroup
+  >
+    @for (stage of stages(); track stage) {
       <article class="column">
         <header>
           <h3>{{ stage }}</h3>
@@ -46,7 +65,7 @@
               <app-candidate-card [candidate]="candidate" (action)="runAction(candidate.id, $event)" />
             </div>
           } @empty {
-            <p class="empty">No candidates</p>
+            <p class="empty">No {{ activeTemplate()?.entityPlural ?? 'records' }} in this stage</p>
           }
         </div>
       </article>

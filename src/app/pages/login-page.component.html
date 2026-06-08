@@ -1,0 +1,44 @@
+<app-auth-shell
+  title="Welcome back"
+  subtitle="Sign in to continue .."
+  footerPrompt="New to Workflova?"
+  footerLinkLabel="Create an account"
+  footerLinkPath="/signup"
+>
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+    @if (errorMessage()) {
+      <p class="form-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" autocomplete="email" formControlName="email" placeholder="you@company.com" />
+      @if (hasError('email', 'required')) {
+        <small>Email is required.</small>
+      } @else if (hasError('email', 'email')) {
+        <small>Enter a valid email address.</small>
+      }
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input
+        type="password"
+        autocomplete="current-password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+      @if (hasError('password', 'required')) {
+        <small>Password is required.</small>
+      } @else if (hasError('password', 'minlength')) {
+        <small>Use at least 8 characters.</small>
+      }
+    </label>
+
+    <button class="primary-button" type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Signing in...' : 'Sign in' }}
+    </button>
+
+    <p class="demo-note">Demo mode stores accounts in this browser only. No backend is connected yet.</p>
+  </form>
+</app-auth-shell>

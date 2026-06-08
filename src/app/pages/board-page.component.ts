@@ -1,12 +1,16 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Candidate, STAGES, Stage } from '../models/candidate.model';
+import { DemoAuthService } from '../auth/services/demo-auth.service';
+import { DemoWorkspaceService } from '../onboarding/services/demo-workspace.service';
+import { Candidate } from '../models/candidate.model';
 import { CandidateCardComponent } from '../components/candidate-card/candidate-card.component';
+import { getSeedCandidatesForTemplate } from '../data/domain-board.seed';
 import { CandidatesActions } from '../state/candidates-ngrx/candidates.actions';
-import { selectAllCandidates } from '../state/candidates-ngrx/candidates.selectors';
+import { selectAllCandidates, selectHydratedTemplateId } from '../state/candidates-ngrx/candidates.selectors';
 
 @Component({
   selector: 'app-board-page',
@@ -17,12 +21,52 @@ import { selectAllCandidates } from '../state/candidates-ngrx/candidates.selecto
 })
 export class BoardPageComponent {
   private readonly store = inject(Store);
-  readonly stages = STAGES;
+  private readonly auth = inject(DemoAuthService);
+  private readonly workspace = inject(DemoWorkspaceService);
+  private readonly router = inject(Router);
+
+  readonly session = this.auth.currentSession;
+  readonly activeWorkspace = this.workspace.currentWorkspace;
+  readonly activeTemplate = computed(() => {
+    const workspace = this.activeWorkspace();
+    return workspace ? this.workspace.getTemplate(workspace.templateId) : null;
+  });
+
+  readonly stages = computed(() => this.activeTemplate()?.stages ?? []);
+  readonly hydratedTemplateId = this.store.selectSignal(selectHydratedTemplateId);
 
   readonly search = signal('');
   readonly selectedTag = signal('all');
   readonly selectedPosition = signal('all');
   readonly candidates = this.store.selectSignal(selectAllCandidates);
+
+  constructor() {
+    effect(() => {
+      const workspace = this.activeWorkspace();
+      const hydratedId = this.hydratedTemplateId();
+      if (!workspace) {
+        return;
+      }
+
+      if (hydratedId === workspace.templateId) {
+        return;
+      }
+
+      const template = this.workspace.getTemplate(workspace.templateId);
+      if (!template) {
+        return;
+      }
+
+      this.store.dispatch(
+        CandidatesActions.hydrateBoard({
+          templateId: workspace.templateId,
+          candidates: getSeedCandidatesForTemplate(workspace.templateId),
+          successStage: template.successStage,
+          failureStage: template.failureStage,
+        }),
+      );
+    });
+  }
 
   readonly tags = computed(() => {
     const values = new Set(this.candidates().flatMap((candidate) => candidate.tags));
@@ -51,11 +95,11 @@ export class BoardPageComponent {
     });
   });
 
-  byStage(stage: Stage): Candidate[] {
+  byStage(stage: string): Candidate[] {
     return this.filtered().filter((candidate) => candidate.stage === stage);
   }
 
-  onDrop(stage: Stage, event: CdkDragDrop<Candidate[]>): void {
+  onDrop(stage: string, event: CdkDragDrop<Candidate[]>): void {
     const moved = event.item.data;
     if (!moved || moved.stage === stage) {
       return;
@@ -66,5 +110,10 @@ export class BoardPageComponent {
 
   runAction(candidateId: string, action: 'schedule' | 'reject' | 'hire'): void {
     this.store.dispatch(CandidatesActions.applyAction({ candidateId, action }));
+  }
+
+  signOut(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login');
   }
 }

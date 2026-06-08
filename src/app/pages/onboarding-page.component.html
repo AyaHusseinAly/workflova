@@ -1,0 +1,163 @@
+<section class="onboarding-page">
+  <header class="wizard-header">
+    <div class="header-brand">
+      <img class="brand-logo brand-logo--compact" src="/workflova.png" alt="Workflova" />
+      <div>
+        <!-- <p class="eyebrow">Workflova</p> -->
+        <p class="form-tagline">Workflow platform</p>
+      </div>
+    </div>
+
+    <ol class="setup-steps">
+      <li [class.active]="step() === 1" [class.complete]="step() > 1">Create board and choose template</li>
+      <li [class.active]="step() === 2">Invite members (optional)</li>
+    </ol>
+
+    <button type="button" class="ghost-button" (click)="signOut()">Sign out</button>
+  </header>
+
+  <main class="wizard-panel">
+    <section class="wizard-card">
+      <div class="step-indicator" aria-hidden="true">
+        <span [class.active]="step() === 1">1</span>
+        <span class="divider"></span>
+        <span [class.active]="step() === 2">2</span>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (step() === 1) {
+        <header class="wizard-copy">
+          <h1>Create your board</h1>
+          <p>Name the workspace and pick the workflow template that matches your domain.</p>
+        </header>
+
+        <form class="wizard-form" [formGroup]="setupForm" (ngSubmit)="continueToInvites()">
+          <label class="field">
+            <span>Board name</span>
+            <input
+              type="text"
+              formControlName="boardName"
+              placeholder="Acme hiring pipeline"
+              autocomplete="organization"
+            />
+            @if (hasSetupError('boardName', 'required')) {
+              <small>Board name is required.</small>
+            } @else if (hasSetupError('boardName', 'minlength')) {
+              <small>Use at least 2 characters.</small>
+            }
+          </label>
+
+          <div class="field">
+            <span>Workflow template</span>
+            <div class="template-grid">
+              @for (template of templates; track template.id) {
+                <button
+                  type="button"
+                  class="template-card"
+                  [class.selected]="setupForm.controls.templateId.value === template.id"
+                  (click)="selectTemplate(template.id)"
+                >
+                  <div class="template-card-head">
+                    <app-workflow-template-icon
+                      [templateId]="template.id"
+                      [accentFrom]="template.accentFrom"
+                      [accentTo]="template.accentTo"
+                    />
+                    <div>
+                      <strong>{{ template.name }}</strong>
+                      <span>{{ template.entityLabel }} workflow</span>
+                    </div>
+                  </div>
+                  <p>{{ template.description }}</p>
+                </button>
+              }
+            </div>
+            @if (hasSetupError('templateId', 'required')) {
+              <small>Select a template to continue.</small>
+            }
+          </div>
+
+          @if (selectedTemplate(); as template) {
+            <div class="template-preview">
+              <div class="template-preview-head">
+                <app-workflow-template-icon
+                  [templateId]="template.id"
+                  [accentFrom]="template.accentFrom"
+                  [accentTo]="template.accentTo"
+                />
+                <div>
+                  <p class="preview-label">Default stages</p>
+                  <p class="preview-title">{{ template.name }} template</p>
+                </div>
+              </div>
+              <div class="stage-list">
+                @for (stage of template.stages; track stage) {
+                  <span>{{ stage }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <button class="primary-button" type="submit">Continue to invites</button>
+        </form>
+      } @else {
+        <header class="wizard-copy">
+          <h1>Invite your team</h1>
+          <p>Add teammates now or skip this step and invite people later from workspace settings.</p>
+        </header>
+
+        <form class="wizard-form" [formGroup]="inviteForm" (ngSubmit)="addInvite()">
+          <div class="invite-row">
+            <label class="field">
+              <span>Email</span>
+              <input type="email" formControlName="email" placeholder="teammate@company.com" autocomplete="email" />
+              @if (hasInviteEmailError()) {
+                <small>Enter a valid email address.</small>
+              }
+            </label>
+
+            <label class="field role-field">
+              <span>Role</span>
+              <select formControlName="role">
+                @for (role of roles; track role) {
+                  <option [value]="role">{{ role }}</option>
+                }
+              </select>
+            </label>
+
+            <button class="secondary-button" type="submit">Add invite</button>
+          </div>
+        </form>
+
+        @if (pendingInvites().length > 0) {
+          <ul class="invite-list">
+            @for (invite of pendingInvites(); track invite.email) {
+              <li>
+                <div>
+                  <strong>{{ invite.email }}</strong>
+                  <span>{{ invite.role }}</span>
+                </div>
+                <button type="button" class="ghost-button" (click)="removeInvite(invite.email)">Remove</button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty-invites">No invites added yet. You can continue without inviting anyone.</p>
+        }
+
+        <div class="wizard-actions">
+          <button type="button" class="ghost-button" (click)="backToSetup()">Back</button>
+          <button type="button" class="ghost-button" (click)="skipInvites()" [disabled]="submitting()">
+            Skip for now
+          </button>
+          <button type="button" class="primary-button" (click)="finishOnboarding()" [disabled]="submitting()">
+            {{ submitting() ? 'Creating board...' : 'Create board' }}
+          </button>
+        </div>
+      }
+    </section>
+  </main>
+</section>
