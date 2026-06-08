@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "recruiter-kanban": {
+    "workflova": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -60,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "recruiter-kanban:build:production"
+              "buildTarget": "workflova:build:production"
             },
             "development": {
-              "buildTarget": "recruiter-kanban:build:development"
+              "buildTarget": "workflova:build:development"
             }
           },
           "defaultConfiguration": "development"

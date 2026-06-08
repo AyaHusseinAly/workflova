@@ -34,12 +34,12 @@ jobs:
         run: npm run build -- --base-href=/workflova/
 
       - name: Add SPA fallback for client-side routing
-        run: cp dist/recruiter-kanban/browser/index.html dist/recruiter-kanban/browser/404.html
+        run: cp dist/workflova/browser/index.html dist/workflova/browser/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/recruiter-kanban/browser
+          path: dist/workflova/browser
 
   deploy:
     needs: build
@@ -61,4 +61,4 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: us-east-1
 
-      # - run: aws s3 sync dist/recruiter-kanban/browser/ s3://BUCKET-NAME/ --delete     
+      # - run: aws s3 sync dist/workflova/browser/ s3://BUCKET-NAME/ --delete     
